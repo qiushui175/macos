@@ -1,0 +1,423 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    user-select: none;
+}
+
+/* Menu Bar */
+.menu-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+    z-index: 1000;
+    font-size: 13px;
+    color: #000;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.menu-left, .menu-right {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.menu-item {
+    cursor: pointer;
+    padding: 0 8px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: background 0.15s;
+}
+
+.menu-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.menu-item.active {
+    font-weight: 600;
+}
+
+.apple-logo {
+    font-size: 16px;
+}
+
+/* Desktop */
+.desktop {
+    position: fixed;
+    top: 24px;
+    left: 0;
+    right: 0;
+    bottom: 80px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-size: cover;
+    background-position: center;
+    transition: background-image 0.5s ease-in-out;
+}
+
+/* Window Styles */
+.window {
+    position: absolute;
+    min-width: 400px;
+    min-height: 300px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: windowOpen 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes windowOpen {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.window.closing {
+    animation: windowClose 0.25s cubic-bezier(0.36, 0, 0.66, -0.56);
+}
+
+@keyframes windowClose {
+    to {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+}
+
+.window.minimizing {
+    animation: windowMinimize 0.4s cubic-bezier(0.36, 0, 0.66, -0.56);
+}
+
+@keyframes windowMinimize {
+    to {
+        opacity: 0;
+        transform: scale(0.1) translateY(500px);
+    }
+}
+
+.window-titlebar {
+    height: 36px;
+    background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    cursor: move;
+    border-bottom: 1px solid #d0d0d0;
+}
+
+.window-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.window-control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    transition: filter 0.15s;
+}
+
+.window-control:hover {
+    filter: brightness(0.9);
+}
+
+.window-control.close {
+    background: #ff5f56;
+}
+
+.window-control.minimize {
+    background: #ffbd2e;
+}
+
+.window-control.maximize {
+    background: #27c93f;
+}
+
+.window-title {
+    flex: 1;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+}
+
+.window-content {
+    flex: 1;
+    overflow: auto;
+    padding: 20px;
+}
+
+/* Dock */
+.dock-container {
+    position: fixed;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+}
+
+.dock {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 6px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    border: 0.5px solid rgba(255, 255, 255, 0.3);
+}
+
+.dock-item {
+    width: 56px;
+    height: 56px;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+}
+
+.dock-item:hover {
+    transform: translateY(-12px) scale(1.2);
+}
+
+.dock-item.bouncing {
+    animation: dockBounce 0.6s cubic-bezier(0.36, 0, 0.66, -0.56);
+}
+
+@keyframes dockBounce {
+    0%, 100% { transform: translateY(0); }
+    25% { transform: translateY(-20px); }
+    50% { transform: translateY(0); }
+    75% { transform: translateY(-10px); }
+}
+
+.dock-item svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.dock-separator {
+    width: 1px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 0 4px;
+}
+
+/* Terminal Specific Styles */
+.terminal-content {
+    background: #1e1e1e;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.terminal-line {
+    margin-bottom: 4px;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.terminal-prompt {
+    color: #00ff00;
+}
+
+.terminal-input {
+    background: transparent;
+    border: none;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    outline: none;
+    width: calc(100% - 100px);
+}
+
+.terminal-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background: #00ff00;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+/* Settings Panel Styles */
+.wallpaper-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+    padding: 20px;
+}
+
+.wallpaper-option {
+    aspect-ratio: 16/10;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    border: 3px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.wallpaper-option:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.wallpaper-option.active {
+    border-color: #007AFF;
+}
+
+.wallpaper-option::after {
+    content: '✓';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #007AFF;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.wallpaper-option.active::after {
+    display: flex;
+}
+
+/* About System Info */
+.system-info {
+    padding: 20px;
+}
+
+.system-info-row {
+    display: flex;
+    margin-bottom: 12px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 6px;
+}
+
+.system-info-label {
+    font-weight: 600;
+    width: 150px;
+    color: #666;
+}
+
+.system-info-value {
+    flex: 1;
+    color: #333;
+}
+
+/* Finder Styles */
+.finder-sidebar {
+    width: 200px;
+    background: #f5f5f5;
+    border-right: 1px solid #ddd;
+    padding: 12px;
+    overflow-y: auto;
+}
+
+.finder-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.finder-toolbar {
+    height: 40px;
+    background: #fafafa;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 8px;
+}
+
+.finder-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.finder-item {
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 4px;
+    transition: background 0.15s;
+}
+
+.finder-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.finder-item.active {
+    background: #007AFF;
+    color: white;
+}
+
+.file-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 8px;
+}
+
+.file-icon:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dock-item {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .window {
+        min-width: 300px;
+        min-height: 250px;
+    }
+}
