@@ -284,7 +284,11 @@ function initializeTerminal(windowId) {
                 break;
             case 'cd':
                 const path = args[0];
-                if (path === '..') {
+                if (!path) {
+                    // cd without arguments goes to home
+                    state.currentPath = '/';
+                    output = '';
+                } else if (path === '..') {
                     // Go up one directory
                     const parts = state.currentPath.split('/').filter(p => p);
                     parts.pop();
@@ -439,7 +443,7 @@ function openAbout() {
             </div>
             <div class="system-info-row">
                 <div class="system-info-label">内存:</div>
-                <div class="system-info-value">${(performance.memory ? (performance.memory.jsHeapSizeLimit / 1024 / 1024 / 1024).toFixed(2) : 'N/A')} GB</div>
+                <div class="system-info-value">${(performance.memory && performance.memory.jsHeapSizeLimit ? (performance.memory.jsHeapSizeLimit / 1024 / 1024 / 1024).toFixed(2) + ' GB' : 'N/A')}</div>
             </div>
             <div class="system-info-row">
                 <div class="system-info-label">用户代理:</div>
